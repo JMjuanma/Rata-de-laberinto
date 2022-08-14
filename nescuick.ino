@@ -53,9 +53,16 @@ void avanzar()
 {
  	digitalWrite(mda); //definir velocidad
  	analogWrite(actD, 130);
- 	digitalWrite(mdi);
+ 	digitalWrite(mia);
  	analogWrite(actI, 130);
- 
+}
+
+void retroceder()
+{
+ 	digitalWrite(mdr); //definir velocidad
+ 	analogWrite(actD, 130);
+ 	digitalWrite(mir);
+ 	analogWrite(actI, 130);
 }
  
 bool detector_frontal()
@@ -98,25 +105,19 @@ void setup()
  
 void loop()
 {
-	while(!detector_frontal())
-	{
-		avanzar()
-		if(!detector_derecho())
-		{
-			stop();
-			derecha();
-			break;
-		}
-	}
+	avanzar();
+	delay(2000);
 	stop();
-	if(!detector_izquierda())
+	derecha();
+	delay(500)
+	if(detector_derecho)
 	{
-		stop();
-		izquierda();
+		retroceder();
+		delay(2000);
 	}
 	else
 	{
 		izquierda();
-		izquierda();
 	}
+
 }
