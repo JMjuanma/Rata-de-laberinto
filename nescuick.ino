@@ -53,9 +53,16 @@ void avanzar()
 {
  	digitalWrite(mda); //definir velocidad
  	analogWrite(actD, 130);
- 	digitalWrite(mdi);
+ 	digitalWrite(mia);
  	analogWrite(actI, 130);
- 
+}
+
+void retroceder()
+{
+ 	digitalWrite(mdr); //definir velocidad
+ 	analogWrite(actD, 130);
+ 	digitalWrite(mir);
+ 	analogWrite(actI, 130);
 }
  
 bool detector_frontal()
