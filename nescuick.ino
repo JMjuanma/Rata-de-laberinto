@@ -101,12 +101,22 @@ void loop()
 	while(!detector_frontal())
 	{
 		avanzar()
-		if(detector_derecho())
+		if(!detector_derecho())
 		{
 			stop();
 			derecha();
 			break;
 		}
 	}
-	if(detector_frontal)
+	stop();
+	if(!detector_izquierda())
+	{
+		stop();
+		izquierda();
+	}
+	else
+	{
+		izquierda();
+		izquierda();
+	}
 }
