@@ -25,99 +25,111 @@ long readUltrasonicDistance(int triggerPin, int echoPin)
  
 long distancia(int x, int y)
 {
-	cm = 0.01723 * readUltrasonicDistance(x, y);
-	return cm;
+  return 0.01723 * readUltrasonicDistance(x, y);
+}
+void stop()
+{
+  dW(mda, 0);
+  dW(mdr, 0);
+  dW(mia, 0);
+  dW(mir, 0);
 }
  
 void derecha()
 {
-	digitalWrite(mia);
- 	analogWrite(actI, 130);
- 	digitalWrite(mdr);
- 	analogWrite(actD, 130);
- 	delay(800);
- 	stop();
+  digitalWrite(mia, 1);
+  analogWrite(actI, 130);
+  digitalWrite(mdr, 1);
+  analogWrite(actD, 130);
+  delay(800);
+  stop();
 }
  
-void izquierda()
+void izquierda( int x)
 {
- 	digitalWrite(mda);
- 	analogWrite(actD, 130);
- 	digitalWrite(mir);
- 	analogWrite(actI, 130);
- 	delay(800);
- 	stop();
+  digitalWrite(mda, 1);
+  analogWrite(actD, 130);
+  digitalWrite(mir, 1);
+  analogWrite(actI, 130);
+  delay(x);
+  stop();
 }
  
 void avanzar()
 {
- 	digitalWrite(mda); //definir velocidad
- 	analogWrite(actD, 130);
- 	digitalWrite(mia);
- 	analogWrite(actI, 130);
+    (detector_izquierda() > detector_derecho()) ? izquierda( 200 ) : derecha( 200 );
+  digitalWrite(mda, 1); //definir velocidad
+  analogWrite(actD, 130);
+  digitalWrite(mia, 1);
+  analogWrite(actI, 130);
+  delay(300)
 }
 
 void retroceder()
 {
- 	digitalWrite(mdr); //definir velocidad
- 	analogWrite(actD, 130);
- 	digitalWrite(mir);
- 	analogWrite(actI, 130);
+  digitalWrite(mdr, 1); //definir velocidad
+  analogWrite(actD, 130);
+  digitalWrite(mir, 1);
+  analogWrite(actI, 130);
 }
  
 bool detector_frontal()
 {
- 	if (distancia(sft, sfe) < 3)
- 	{
- 		return true;
- 	}
- 
+  return distancia(sft, sfe) < 3;
 }
 bool detector_izquierda()
 {
-	if(distancia(sit, sie) < 3)
-	{
-		return true;
-	}
+  return distancia(sit, sie) < 3;
 }
 void detector_derecho()
 {
- if (distancia(sdt, sde) < 3)
-	{
-		return true;
-	}
+  return distancia(sdt, sde) < 3;
 }
-void stop()
-{
-	dW(mda, 0);
-	dW(mdr, 0);
-	dW(mia, 0);
-	dW(mir, 0);
-}
+
 
 void setup()
 {
-	pM(mda, O);
-	pM(mdr, O);
-	pM(mia, O);
-	pM(mir, O);
+  pM(mda, O);
+  pM(mdr, O);
+  pM(mia, O);
+  pM(mir, O);
 }
  
 void loop()
 {
-	avanzar();
-	delay(2000);
-	stop();
-	derecha();
-	delay(500)
-	if(detector_derecho)
+	while(!detector_frontal())
 	{
-		retroceder();
-		delay(2000);
+		if(!detector_derecho())
+		{
+			stop();
+			derecha(800);
+			break;
+		}
+		avanzar();
+	}
+	stop();
+	if(!detector_izquierda())
+	{
+		stop();
+		izquierda(800);
 	}
 	else
 	{
-		izquierda();
+		izquierda(1600);
 	}
-
+    stop();
+    avanzar();
+    delay(5000);
+    stop();
+    derecha();
+    delay(5000);
+    if(detector_derecho())
+    {
+    retroceder();
+    delay(3000);
+    }
+    else
+    {
+        izquierda(800);
+    }
 }
