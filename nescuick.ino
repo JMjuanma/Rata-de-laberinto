@@ -35,13 +35,13 @@ void stop()
   dW(mir, 0);
 }
  
-void derecha()
+void derecha( int x)
 {
   digitalWrite(mia, 1);
   analogWrite(actI, 130);
   digitalWrite(mdr, 1);
   analogWrite(actD, 130);
-  delay(800);
+  delay(x);
   stop();
 }
  
@@ -73,17 +73,17 @@ void retroceder()
   analogWrite(actI, 130);
 }
  
-bool detector_frontal()
+int detector_frontal()
 {
-  return distancia(sft, sfe) < 3;
+  return distancia(sft, sfe);
 }
-bool detector_izquierda()
+int detector_izquierda()
 {
-  return distancia(sit, sie) < 3;
+  return distancia(sit, sie);
 }
-void detector_derecho()
+int detector_derecho()
 {
-  return distancia(sdt, sde) < 3;
+  return distancia(sdt, sde);
 }
 
 
@@ -97,9 +97,9 @@ void setup()
  
 void loop()
 {
-	while(!detector_frontal())
+	while(detector_frontal() < 5)
 	{
-		if(!detector_derecho())
+		if(detector_derecho() < 5)
 		{
 			stop();
 			derecha(800);
@@ -108,7 +108,7 @@ void loop()
 		avanzar();
 	}
 	stop();
-	if(!detector_izquierda())
+	if(detector_izquierda() < 5)
 	{
 		stop();
 		izquierda(800);
@@ -120,16 +120,12 @@ void loop()
     stop();
     avanzar();
     delay(5000);
-    stop();
-    derecha();
-    delay(5000);
-    if(detector_derecho())
-    {
-    retroceder();
-    delay(3000);
-    }
-    else
-    {
-        izquierda(800);
-    }
+  if (detector_derecho()>detector_izquierdo())
+  {
+    derecha(200);
+  }
+  else if (detector_izquierda()>detector_derecho())
+  {
+    izquierda(200);
+  }
 }
